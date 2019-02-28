@@ -18,6 +18,19 @@ with open(sys.argv[1]) as f:
             means_nb_tags += int(array[1])
             nb_image += 1
 
+slide1 = None
+slide2 = None
+for slide in pictures:
+    if (slide1 != None and slide.type == "V"):
+        slide2 = slide
+    if (slide1 == None and slide.type == "V"):
+        slide1 = slide
+    if (slide1 != None and slide2 != None):
+        slide.ConcatV(slide1, slide2)
+        pictures.pop(int(slide2.id[0]))
+        slide1 = None
+        slide2 = None
+
 def common_elements(list1, list2):
     return len([element for element in list1 if element in list2])
 
@@ -29,7 +42,7 @@ def calcul_score(slide1, slide2):
     dif = diff (slide1.tags, slide2.tags)
     same1 = common_elements (slide1.tags, slide2.tags)
     same2 = common_elements (slide2.tags, slide1.tags)
-    # print (dif, same1, same2)
+    # print (same1, same2, dif)
     return (min (min (dif, same1), same2))
 
 moyenne  = int(means_nb_tags / nb_image)
@@ -51,18 +64,21 @@ score = 0
 index = 0
 tmp = 0
 i = 0
-while (len(pictures) != 0):
+n = 10000
+while (len(pictures) > 79000):
     i = 0
-    for i in range (2):
-        if (len (pictures) == 1):
+    index = 0
+    for i in range (n):
+        if (len (pictures) <= n - 1):
             break
         tmp = calcul_score(slideShow[-1], pictures[i])
         if (tmp > score):
             index = i
             score = tmp
-        print (score, moyenne)
-        if (score == moyenne):
-            break
         i += 1
-    slideShow.append(pictures[tmp])
-    del pictures[tmp]
+    slideShow.append(pictures[index])
+    del pictures[index]
+
+print (len(slideShow))
+for element in slideShow:
+    print (element.id)
