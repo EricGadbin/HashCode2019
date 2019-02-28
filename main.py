@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from slide import Slide
+import random
 import sys
 
 if len(sys.argv) < 2 or len(sys.argv) > 2:
@@ -57,20 +58,17 @@ while (j < len (pictures)):
     j += 1
 
 
-
+random.shuffle(pictures)
 slideShow.append(pictures[0])
 del pictures[0]
 score = 0
 index = 0
 tmp = 0
 i = 0
-n = 10000
-while (len(pictures) > 79000):
+while (len(pictures) != 0):
     i = 0
     index = 0
-    for i in range (n):
-        if (len (pictures) <= n - 1):
-            break
+    for i in range (len(pictures)):
         tmp = calcul_score(slideShow[-1], pictures[i])
         if (tmp > score):
             index = i
